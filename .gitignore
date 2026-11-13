@@ -4,3 +4,6 @@
 extracted-v*/
 .venv/
 node_modules/
+
+# Local extension packages
+releases/
