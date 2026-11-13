@@ -1,0 +1,74 @@
+{
+  "name": "faroese-language-tools",
+  "displayName": "Faroese Language Tools",
+  "description": "Local Faroese proofreading with Hunspell and Divvun, red/blue warnings and Quick Fix suggestions.",
+  "version": "0.2.1",
+  "publisher": "faroese-local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:faroese.check"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "faroese.check",
+        "title": "Faroese: Check Current Document"
+      }
+    ],
+    "configuration": {
+      "title": "Faroese Language Tools",
+      "properties": {
+        "faroese.enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "faroese.hunspellPath": {
+          "type": "string",
+          "default": "hunspell"
+        },
+        "faroese.dictionary": {
+          "type": "string",
+          "default": "fo_FO"
+        },
+        "faroese.divvunPath": {
+          "type": "string",
+          "default": "${userHome}/.cargo/bin/divvunspell"
+        },
+        "faroese.modelPath": {
+          "type": "string",
+          "default": "${userHome}/AI/Faroese-Language-Tools/divvun/fo.bhfst"
+        },
+        "faroese.maxUniqueWords": {
+          "type": "integer",
+          "default": 300,
+          "minimum": 10,
+          "maximum": 5000,
+          "description": "Maximum distinct words analyzed per document per pass; increase for large dictionaries."
+        },
+        "faroese.checkOnType": {
+          "type": "boolean",
+          "default": true
+        },
+        "faroese.useDivvun": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  },
+  "files": [
+    "extension.js",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ]
+}

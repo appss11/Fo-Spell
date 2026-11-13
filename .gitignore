@@ -1,0 +1,6 @@
+*.vsix
+*.zip
+*.backup
+extracted-v*/
+.venv/
+node_modules/
