@@ -1,5 +1,6 @@
 'use strict';
 const vscode = require('vscode');
+const {discoverWorkspaceFiles} = require('./workspaceScanner');
 const {spawn} = require('node:child_process');
 const os = require('node:os');
 const path = require('node:path');
@@ -130,6 +131,12 @@ function activate(context) {
   red=vscode.window.createTextEditorDecorationType({textDecoration:'underline wavy #e05252'});
   blue=vscode.window.createTextEditorDecorationType({textDecoration:'underline wavy #3989ed'});
   context.subscriptions.push(diagnostics,red,blue);
+  context.subscriptions.push(vscode.commands.registerCommand('faroese.scanWorkspace',async()=>{
+    const files=await discoverWorkspaceFiles();
+    vscode.window.showInformationMessage(
+      `Fo-Spell: discovered ${files.length} eligible workspace files.`
+    );
+  }));
   context.subscriptions.push(vscode.commands.registerCommand('faroese.check',()=>{const d=vscode.window.activeTextEditor?.document;if(d)schedule(d,0);}));
   context.subscriptions.push(vscode.commands.registerCommand('faroese.ignore',(word,uri)=>{
     ignored.add(word.toLocaleLowerCase());const d=vscode.workspace.textDocuments.find(x=>x.uri.toString()===uri.toString());if(d)schedule(d,0);

@@ -22,6 +22,10 @@
       {
         "command": "faroese.check",
         "title": "Faroese: Check Current Document"
+      },
+      {
+        "command": "faroese.scanWorkspace",
+        "title": "Faroese: Discover Workspace Files"
       }
     ],
     "configuration": {
@@ -69,6 +73,7 @@
     "extension.js",
     "README.md",
     "LICENSE",
-    "package.json"
+    "package.json",
+    "workspaceScanner.js"
   ]
 }
