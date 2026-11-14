@@ -8,13 +8,13 @@ const {
     getActiveDictionaries,
 } = require('../../src/core/settings');
 
-test('defaults enable all three languages', () => {
+test('defaults enable Faroese only', () => {
     const settings = readSettings({
         get: (_, fallback) => fallback,
     });
 
     assert.deepEqual(
-        getActiveDictionaries(settings), ['fo_FO', 'en_GB', 'en_US']
+        getActiveDictionaries(settings), ['fo_FO']
     );
 });
 
