@@ -3,8 +3,8 @@
 const DEFAULT_SETTINGS = Object.freeze({
     enabled: true,
     checkFaroese: true,
-    checkEnglishGB: true,
-    checkEnglishUS: true,
+    checkEnglishGB: false,
+    checkEnglishUS: false,
     useDivvun: true,
     showReviewWarnings: false,
     checkOnType: true,
