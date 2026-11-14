@@ -10,6 +10,8 @@ const { Decorations } = require('./src/diagnostics/decorations');
 const { discoverWorkspaceFiles } = require('./src/workspace/workspaceScanner');
 const { WorkspaceCheckQueue } = require('./src/workspace/workspaceQueue');
 const { PersonalDictionary } = require('./src/core/personalDictionary');
+const { DictionaryStatusBar } = require('./src/ui/dictionaryStatusBar');
+const { SuggestionCodeLensProvider } = require('./src/ui/suggestionCodeLensProvider');
 
 const findingsByUri = new Map();
 const revisions = new Map();
@@ -22,6 +24,8 @@ let diagnostics;
 let decorations;
 let workspaceQueue;
 let personalDictionary;
+let dictionaryStatusBar;
+let suggestionCodeLensProvider;
 let warningShown = false;
 
 function getSettings() {
@@ -66,6 +70,7 @@ async function checkDocument(document) {
         );
 
         findingsByUri.set(key, filtered);
+        suggestionCodeLensProvider?.refresh();
 
         diagnostics.publish(
             document.uri,
@@ -99,6 +104,7 @@ function scheduleCheck(document, delay = 400) {
         timers.delete(key);
         revisions.set(key, (revisions.get(key) || 0) + 1);
         findingsByUri.delete(key);
+        suggestionCodeLensProvider?.refresh();
         diagnostics.clear(document.uri);
         refreshDecorations();
         return;
@@ -147,6 +153,11 @@ function activate(context) {
 
     diagnostics = new DiagnosticManager(vscode);
     decorations = new Decorations(vscode);
+    dictionaryStatusBar = new DictionaryStatusBar(vscode, getSettings);
+    suggestionCodeLensProvider = new SuggestionCodeLensProvider(
+        vscode,
+        findingsByUri
+    );
 
     workspaceQueue = new WorkspaceCheckQueue(async uri => {
         const document = await vscode.workspace.openTextDocument(uri);
@@ -157,6 +168,8 @@ function activate(context) {
     context.subscriptions.push(
         workspaceQueue,
         diagnostics,
+        dictionaryStatusBar,
+        suggestionCodeLensProvider,
         {
             dispose: () => decorations.dispose(
                 vscode.window.visibleTextEditors
@@ -284,6 +297,53 @@ function activate(context) {
         )
     );
 
+    // Dictionary toggles shown in the bottom status bar.
+    const dictionaryToggleCommands = [
+        ['faroese.toggleFaroese', 'checkFaroese'],
+        ['faroese.toggleEnglishGB', 'checkEnglishGB'],
+        ['faroese.toggleEnglishUS', 'checkEnglishUS'],
+    ];
+
+    for (const [command, setting] of dictionaryToggleCommands) {
+        context.subscriptions.push(
+            vscode.commands.registerCommand(command, async () => {
+                const configuration = vscode.workspace.getConfiguration('faroese');
+                const current = configuration.get(setting, getSettings()[setting]);
+
+                await configuration.update(
+                    setting,
+                    !current,
+                    vscode.ConfigurationTarget.Global
+                );
+
+                dictionaryStatusBar.update();
+            })
+        );
+    }
+
+    // Apply a selected suggestion from its inline CodeLens.
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'faroese.applySuggestion',
+            async (uri, range, suggestion) => {
+                if (!uri || !range || typeof suggestion !== 'string') return;
+
+                const edit = new vscode.WorkspaceEdit();
+                edit.replace(uri, range, suggestion);
+                await vscode.workspace.applyEdit(edit);
+            }
+        )
+    );
+
+    // Show clickable recommended replacements above the affected line.
+    context.subscriptions.push(
+        vscode.languages.registerCodeLensProvider(
+            [...require('./src/core/documentChecker').SUPPORTED_LANGUAGES]
+                .map(language => ({ language })),
+            suggestionCodeLensProvider
+        )
+    );
+
     // Quick Fix provider
     context.subscriptions.push(
         vscode.languages.registerCodeActionsProvider(
@@ -361,6 +421,8 @@ function activate(context) {
     context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration(event => {
             if (event.affectsConfiguration('faroese')) {
+                dictionaryStatusBar.update();
+
                 for (const document of vscode.workspace.textDocuments) {
                     scheduleCheck(document, 0);
                 }
@@ -395,6 +457,7 @@ function activate(context) {
             revisions.set(key, (revisions.get(key) || 0) + 1);
 
             findingsByUri.delete(key);
+            suggestionCodeLensProvider?.refresh();
             diagnostics.clear(document.uri);
 
             refreshDecorations();
@@ -415,7 +478,7 @@ function activate(context) {
         console.error('Fo-Spell workspace scan failed:', error);
     });
 
-    console.log('Fo-Spell 0.3.0 activated.');
+    console.log('Fo-Spell 0.3.1 activated.');
 }
 
 function deactivate() {
