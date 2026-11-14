@@ -7,3 +7,14 @@ node_modules/
 
 # Local extension packages
 releases/
+
+# Local VS Code configuration
+.vscode/
+
+# Temporary recovery and development files
+*.pre-v030
+*.pre-dictionary*
+*.recovery
+extension.js.v030
+test.txt
+tests/extension(original).js

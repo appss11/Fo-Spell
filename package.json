@@ -1,79 +1,115 @@
 {
-  "name": "faroese-language-tools",
-  "displayName": "Faroese Language Tools",
-  "description": "Local Faroese proofreading with Hunspell and Divvun, red/blue warnings and Quick Fix suggestions.",
-  "version": "0.2.1",
-  "publisher": "faroese-local",
-  "license": "MIT",
-  "engines": {
-    "vscode": "^1.90.0"
-  },
-  "categories": [
-    "Linters",
-    "Other"
-  ],
-  "main": "./extension.js",
-  "activationEvents": [
-    "onStartupFinished",
-    "onCommand:faroese.check"
-  ],
-  "contributes": {
-    "commands": [
-      {
-        "command": "faroese.check",
-        "title": "Faroese: Check Current Document"
-      },
-      {
-        "command": "faroese.scanWorkspace",
-        "title": "Faroese: Discover Workspace Files"
-      }
+    "name": "faroese-language-tools",
+    "displayName": "Faroese Language Tools",
+    "description": "Local Faroese proofreading with Hunspell and Divvun, red/blue warnings and Quick Fix suggestions.",
+    "version": "0.3.0",
+    "publisher": "faroese-local",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.90.0"
+    },
+    "categories": [
+        "Linters",
+        "Other"
     ],
-    "configuration": {
-      "title": "Faroese Language Tools",
-      "properties": {
-        "faroese.enabled": {
-          "type": "boolean",
-          "default": true
-        },
-        "faroese.hunspellPath": {
-          "type": "string",
-          "default": "hunspell"
-        },
-        "faroese.dictionary": {
-          "type": "string",
-          "default": "fo_FO"
-        },
-        "faroese.divvunPath": {
-          "type": "string",
-          "default": "${userHome}/.cargo/bin/divvunspell"
-        },
-        "faroese.modelPath": {
-          "type": "string",
-          "default": "${userHome}/AI/Faroese-Language-Tools/divvun/fo.bhfst"
-        },
-        "faroese.maxUniqueWords": {
-          "type": "integer",
-          "default": 300,
-          "minimum": 10,
-          "maximum": 5000,
-          "description": "Maximum distinct words analyzed per document per pass; increase for large dictionaries."
-        },
-        "faroese.checkOnType": {
-          "type": "boolean",
-          "default": true
-        },
-        "faroese.useDivvun": {
-          "type": "boolean",
-          "default": true
+    "main": "./extension.js",
+    "activationEvents": [
+        "onStartupFinished",
+        "onCommand:faroese.check"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "faroese.check",
+                "title": "Faroese: Check Current Document"
+            },
+            {
+                "command": "faroese.scanWorkspace",
+                "title": "Faroese: Discover Workspace Files"
+            },
+            {
+                "command": "faroese.addToPersonalDictionary",
+                "title": "Fo-Spell: Add to Personal Dictionary"
+            },
+            {
+                "command": "faroese.showPersonalDictionary",
+                "title": "Fo-Spell: Show Personal Dictionary"
+            },
+            {
+                "command": "faroese.removePersonalDictionary",
+                "title": "Fo-Spell: Remove from Personal Dictionary"
+            }
+        ],
+        "configuration": {
+            "title": "Faroese Language Tools",
+            "properties": {
+                "faroese.enabled": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "faroese.hunspellPath": {
+                    "type": "string",
+                    "default": "hunspell"
+                },
+                "faroese.dictionary": {
+                    "type": "string",
+                    "default": "fo_FO"
+                },
+                "faroese.divvunPath": {
+                    "type": "string",
+                    "default": "${userHome}/.cargo/bin/divvunspell"
+                },
+                "faroese.modelPath": {
+                    "type": "string",
+                    "default": "${userHome}/AI/Faroese-Language-Tools/divvun/fo.bhfst"
+                },
+                "faroese.maxUniqueWords": {
+                    "type": "integer",
+                    "default": 300,
+                    "minimum": 10,
+                    "maximum": 5000,
+                    "description": "Maximum distinct words analyzed per document per pass; increase for large dictionaries."
+                },
+                "faroese.checkOnType": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "faroese.useDivvun": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "faroese.checkFaroese": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable Faroese spellchecking with Hunspell and Divvun."
+                },
+                "faroese.checkEnglishGB": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable British English spellchecking."
+                },
+                "faroese.checkEnglishUS": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable American English spellchecking."
+                },
+                "faroese.showReviewWarnings": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Show informational linguistic review warnings in the editor."
+                }
+            }
         }
-      }
+    },
+    "files": [
+        "extension.js",
+        "README.md",
+        "LICENSE",
+        "package.json",
+        "src/**"
+    ],
+    "scripts": {
+        "check": "node --check extension.js && find src -type f -name '*.js' -print0 | xargs -0 -r -n1 node --check",
+        "test": "node --test"
     }
-  },
-  "files": [
-    "extension.js",
-    "README.md",
-    "LICENSE",
-    "package.json",
-    "workspaceScanner.js"
-  ]
 }
