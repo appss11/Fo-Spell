@@ -1,8 +1,8 @@
 {
     "name": "faroese-language-tools",
     "displayName": "Faroese Language Tools",
-    "description": "Local Faroese proofreading with Hunspell and Divvun, red/blue warnings and Quick Fix suggestions.",
-    "version": "0.3.0",
+    "description": "Faroese-first local spell checking for VS Code with clickable suggestions, personal dictionary, and status-bar language toggles.",
+    "version": "0.3.1",
     "publisher": "faroese-local",
     "license": "MIT",
     "engines": {
@@ -25,7 +25,7 @@
             },
             {
                 "command": "faroese.scanWorkspace",
-                "title": "Faroese: Discover Workspace Files"
+                "title": "Fo-Spell: Scan Workspace"
             },
             {
                 "command": "faroese.addToPersonalDictionary",
@@ -38,6 +38,18 @@
             {
                 "command": "faroese.removePersonalDictionary",
                 "title": "Fo-Spell: Remove from Personal Dictionary"
+            },
+            {
+                "command": "faroese.toggleFaroese",
+                "title": "Fo-Spell: Toggle Faroese Dictionary"
+            },
+            {
+                "command": "faroese.toggleEnglishGB",
+                "title": "Fo-Spell: Toggle English (UK) Dictionary"
+            },
+            {
+                "command": "faroese.toggleEnglishUS",
+                "title": "Fo-Spell: Toggle English (US) Dictionary"
             }
         ],
         "configuration": {
@@ -85,12 +97,12 @@
                 },
                 "faroese.checkEnglishGB": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "Enable British English spellchecking."
                 },
                 "faroese.checkEnglishUS": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "Enable American English spellchecking."
                 },
                 "faroese.showReviewWarnings": {
