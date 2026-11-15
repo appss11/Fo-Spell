@@ -1,0 +1,11 @@
+.vscode/**
+tests/**
+releases/**
+*.backup
+*.pre-v030
+*.v030
+test.txt
+workspaceScanner.js
+workspaceQueue.js
+node_modules/**
+.git/**
